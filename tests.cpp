@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#define setMaxValue 5000000
+#define setMaxValue 1000000
 
 std::set<int> first, second, third, expected_result;
 
@@ -105,6 +105,22 @@ TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersection_8_th) {
     ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 8));
 }
 
+TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersectionSumResult_1_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 1));
+}
+
+TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersectionSumResult_2_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 2));
+}
+
+TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersectionSumResult_4_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 4));
+}
+
+TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersectionSumResult_8_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 8));
+}
+
 class LowIntersection : public testing::Test {
 public:
     static void SetUpTestSuite() {
@@ -181,6 +197,22 @@ TEST_F(LowIntersection, onePassMultiThreadSetIntersection_4_th) {
 
 TEST_F(LowIntersection, onePassMultiThreadSetIntersection_8_th) {
     ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 8));
+}
+
+TEST_F(LowIntersection, onePassMultiThreadSetIntersectionSumResult_1_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 1));
+}
+
+TEST_F(LowIntersection, onePassMultiThreadSetIntersectionSumResult_2_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 2));
+}
+
+TEST_F(LowIntersection, onePassMultiThreadSetIntersectionSumResult_4_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 4));
+}
+
+TEST_F(LowIntersection, onePassMultiThreadSetIntersectionSumResult_8_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 8));
 }
 
 class HighIntersection : public testing::Test {
@@ -265,6 +297,21 @@ TEST_F(HighIntersection, onePassMultiThreadSetIntersection_8_th) {
     ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 8));
 }
 
+TEST_F(HighIntersection, onePassMultiThreadSetIntersectionSumResult_1_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 1));
+}
+
+TEST_F(HighIntersection, onePassMultiThreadSetIntersectionSumResult_2_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 2));
+}
+
+TEST_F(HighIntersection, onePassMultiThreadSetIntersectionSumResult_4_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 4));
+}
+
+TEST_F(HighIntersection, onePassMultiThreadSetIntersectionSumResult_8_th) {
+    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 8));
+}
 
 class HugeIntersectionCommon : public testing::Test {
 public:
