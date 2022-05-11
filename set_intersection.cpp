@@ -275,3 +275,75 @@ std::set<E> onePassMultiThreadSetIntersection(const std::set<E>& first,
 
 	return result;
 }
+
+
+template<typename E>
+std::set<E> onePassMultiThreadSetIntersectionSumResult(const std::set<E>& first,
+						 	 	 const std::set<E>& second,
+								 const std::set<E>& third,
+								 int threadAmount) {
+	std::vector<std::set<E>> result_tmp(threadAmount);
+	std::mutex result_mutex;
+	std::vector<std::thread> threads;
+	E first_max_element = *(--first.end());
+	E second_max_element = *(--second.end());
+	E third_max_element = *(--third.end());
+
+	for (int i = 0; i < threadAmount; ++i) {
+		auto firstIterator = first.lower_bound(first_max_element / threadAmount * i);
+		auto firstIteratorEnd = first.lower_bound(first_max_element / threadAmount * (i + 1) + threadAmount);
+
+		auto secondIterator = second.lower_bound(second_max_element / threadAmount * i);
+		auto secondIteratorEnd = second.lower_bound(second_max_element / threadAmount * (i + 1) + threadAmount);
+
+		auto thirdIterator = third.lower_bound(third_max_element / threadAmount * i);
+		auto thirdIteratorEnd = third.lower_bound(third_max_element / threadAmount * (i + 1) + threadAmount);
+
+		threads.emplace_back(
+				std::thread([](
+						typename std::set<E>::iterator firstIterator, typename std::set<E>::iterator firstIteratorEnd,
+						typename std::set<E>::iterator secondIterator, typename std::set<E>::iterator secondIteratorEnd,
+						typename std::set<E>::iterator thirdIterator, typename std::set<E>::iterator thirdIteratorEnd,
+						std::set<E> *result) {
+			while (firstIterator != firstIteratorEnd and secondIterator != secondIteratorEnd
+					and thirdIterator != thirdIteratorEnd) {
+				if (*firstIterator > *secondIterator) {
+					++secondIterator;
+					continue;
+				}
+
+				if (*firstIterator < *secondIterator) {
+					++firstIterator;
+					continue;
+				}
+
+				if (*firstIterator > *thirdIterator) {
+					++thirdIterator;
+					continue;
+				}
+
+				if (*firstIterator < *thirdIterator) {
+					++firstIterator;
+					continue;
+				}
+
+				result->insert(*firstIterator);
+
+				++firstIterator;
+				++secondIterator;
+				++thirdIterator;
+			}
+		}, firstIterator, firstIteratorEnd, secondIterator, secondIteratorEnd, thirdIterator, thirdIteratorEnd, &result_tmp[i]));
+	}
+
+	for (std::thread& t : threads) {
+		t.join();
+	}
+
+	std::set<E> result;
+	for (int i = 0; i < threadAmount; ++i) {
+	    result.insert(result_tmp[i].begin(), result_tmp[i].end());
+	}
+	return result;
+}
+
