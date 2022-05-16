@@ -1,8 +1,47 @@
 #include "set_intersection.cpp"
 
+#include <array>
 #include <gtest/gtest.h>
 
-#define setMaxValue 1000000
+#define setMaxValue 5000000
+
+#define test_with_all_threads(func)                                 									\
+	TEST_F(CommonSetIntersection, func##_1_th) {                                                        \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 1));           \
+	}                                                                                                   \
+	TEST_F(CommonSetIntersection, func##_2_th) {                                                        \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 2));           \
+	}                                                                                                   \
+	TEST_F(CommonSetIntersection, func##_4_th) {                                                        \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 4));           \
+	}                                                                                                   \
+	TEST_F(CommonSetIntersection, func##_8_th) {                                                        \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 8));           \
+	}                                                                                                   \
+	TEST_F(LowIntersection, func##_1_th) {                                                              \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 1));           \
+	}                                                                                                   \
+	TEST_F(LowIntersection, func##_2_th) {                                                              \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 2));           \
+	}                                                                                                   \
+	TEST_F(LowIntersection, func##_4_th) {                                                              \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 4));           \
+	}                                                                                                   \
+	TEST_F(LowIntersection, func##_8_th) {                                                              \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 8));           \
+	}                                                                                                   \
+	TEST_F(HighIntersection, func##_1_th) {                                                             \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 1));           \
+	}                                                                                                   \
+	TEST_F(HighIntersection, func##_2_th) {                                                             \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 2));           \
+	}                                                                                                   \
+	TEST_F(HighIntersection, func##_4_th) {                                                             \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 4));           \
+	}                                                                                                   \
+	TEST_F(HighIntersection, func##_8_th) {                                                             \
+		ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 8));           \
+	}
 
 std::set<int> first, second, third, expected_result;
 
@@ -41,85 +80,7 @@ TEST_F(CommonSetIntersection, onePassSetIntersection) {
     ASSERT_EQ(expected_result, onePassSetIntersection(first, second, third));
 }
 
-TEST_F(CommonSetIntersection, naiveMultiThreadSetIntersection_1_th) {
-    ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 1));
-}
 
-TEST_F(CommonSetIntersection, naiveMultiThreadSetIntersection_2_th) {
-    ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 2));
-}
-
-TEST_F(CommonSetIntersection, naiveMultiThreadSetIntersection_4_th) {
-    ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 4));
-}
-
-TEST_F(CommonSetIntersection, naiveMultiThreadSetIntersection_8_th) {
-    ASSERT_EQ(expected_result, naiveMultiThreadSetIntersection(first, second, third, 8));
-}
-
-TEST_F(CommonSetIntersection, partioningMultiThreadSetIntersection_1_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 1));
-}
-
-TEST_F(CommonSetIntersection, partioningMultiThreadSetIntersection_2_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 2));
-}
-
-TEST_F(CommonSetIntersection, partioningMultiThreadSetIntersection_4_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 4));
-}
-
-TEST_F(CommonSetIntersection, partioningMultiThreadSetIntersection_8_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 8));
-}
-
-TEST_F(CommonSetIntersection, valuePartioningMultiThreadSetIntersection_1_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 1));
-}
-
-TEST_F(CommonSetIntersection, valuePartioningMultiThreadSetIntersection_2_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 2));
-}
-
-TEST_F(CommonSetIntersection, valuePartioningMultiThreadSetIntersection_4_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 4));
-}
-
-TEST_F(CommonSetIntersection, valuePartioningMultiThreadSetIntersection_8_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 8));
-}
-
-TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersection_1_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 1));
-}
-
-TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersection_2_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 2));
-}
-
-TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersection_4_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 4));
-}
-
-TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersection_8_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 8));
-}
-
-TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersectionSumResult_1_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 1));
-}
-
-TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersectionSumResult_2_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 2));
-}
-
-TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersectionSumResult_4_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 4));
-}
-
-TEST_F(CommonSetIntersection, onePassMultiThreadSetIntersectionSumResult_8_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 8));
-}
 
 class LowIntersection : public testing::Test {
 public:
@@ -151,69 +112,7 @@ TEST_F(LowIntersection, onePassSetIntersection) {
     ASSERT_EQ(expected_result, onePassSetIntersection(first, second, third));
 }
 
-TEST_F(LowIntersection, partioningMultiThreadSetIntersection_1_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 1));
-}
 
-TEST_F(LowIntersection, partioningMultiThreadSetIntersection_2_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 2));
-}
-
-TEST_F(LowIntersection, partioningMultiThreadSetIntersection_4_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 4));
-}
-
-TEST_F(LowIntersection, partioningMultiThreadSetIntersection_8_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 8));
-}
-
-TEST_F(LowIntersection, valuePartioningMultiThreadSetIntersection_1_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 1));
-}
-
-TEST_F(LowIntersection, valuePartioningMultiThreadSetIntersection_2_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 2));
-}
-
-TEST_F(LowIntersection, valuePartioningMultiThreadSetIntersection_4_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 4));
-}
-
-TEST_F(LowIntersection, valuePartioningMultiThreadSetIntersection_8_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 8));
-}
-
-TEST_F(LowIntersection, onePassMultiThreadSetIntersection_1_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 1));
-}
-
-TEST_F(LowIntersection, onePassMultiThreadSetIntersection_2_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 2));
-}
-
-TEST_F(LowIntersection, onePassMultiThreadSetIntersection_4_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 4));
-}
-
-TEST_F(LowIntersection, onePassMultiThreadSetIntersection_8_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 8));
-}
-
-TEST_F(LowIntersection, onePassMultiThreadSetIntersectionSumResult_1_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 1));
-}
-
-TEST_F(LowIntersection, onePassMultiThreadSetIntersectionSumResult_2_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 2));
-}
-
-TEST_F(LowIntersection, onePassMultiThreadSetIntersectionSumResult_4_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 4));
-}
-
-TEST_F(LowIntersection, onePassMultiThreadSetIntersectionSumResult_8_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 8));
-}
 
 class HighIntersection : public testing::Test {
 public:
@@ -247,71 +146,6 @@ TEST_F(HighIntersection, onePassSetIntersection) {
     ASSERT_EQ(expected_result, onePassSetIntersection(first, second, third));
 }
 
-
-TEST_F(HighIntersection, partioningMultiThreadSetIntersection_1_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 1));
-}
-
-TEST_F(HighIntersection, partioningMultiThreadSetIntersection_2_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 2));
-}
-
-TEST_F(HighIntersection, partioningMultiThreadSetIntersection_4_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 4));
-}
-
-TEST_F(HighIntersection, partioningMultiThreadSetIntersection_8_th) {
-    ASSERT_EQ(expected_result, partioningMultiThreadSetIntersection(first, second, third, 8));
-}
-
-TEST_F(HighIntersection, valuePartioningMultiThreadSetIntersection_1_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 1));
-}
-
-TEST_F(HighIntersection, valuePartioningMultiThreadSetIntersection_2_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 2));
-}
-
-TEST_F(HighIntersection, valuePartioningMultiThreadSetIntersection_4_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 4));
-}
-
-TEST_F(HighIntersection, valuePartioningMultiThreadSetIntersection_8_th) {
-    ASSERT_EQ(expected_result, valuePartioningMultiThreadSetIntersection(first, second, third, 8));
-}
-
-
-TEST_F(HighIntersection, onePassMultiThreadSetIntersection_1_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 1));
-}
-
-TEST_F(HighIntersection, onePassMultiThreadSetIntersection_2_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 2));
-}
-
-TEST_F(HighIntersection, onePassMultiThreadSetIntersection_4_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 4));
-}
-
-TEST_F(HighIntersection, onePassMultiThreadSetIntersection_8_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersection(first, second, third, 8));
-}
-
-TEST_F(HighIntersection, onePassMultiThreadSetIntersectionSumResult_1_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 1));
-}
-
-TEST_F(HighIntersection, onePassMultiThreadSetIntersectionSumResult_2_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 2));
-}
-
-TEST_F(HighIntersection, onePassMultiThreadSetIntersectionSumResult_4_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 4));
-}
-
-TEST_F(HighIntersection, onePassMultiThreadSetIntersectionSumResult_8_th) {
-    ASSERT_EQ(expected_result, onePassMultiThreadSetIntersectionSumResult(first, second, third, 8));
-}
 
 class HugeIntersectionCommon : public testing::Test {
 public:
@@ -382,6 +216,13 @@ public:
 //}
 
 
+test_with_all_threads(naiveMultiThreadSetIntersection);
+test_with_all_threads(partioningMultiThreadSetIntersection);
+test_with_all_threads(valuePartioningMultiThreadSetIntersection);
+test_with_all_threads(onePassMultiThreadSetIntersection);
+test_with_all_threads(onePassMultiThreadSetIntersectionSumResult);
+test_with_all_threads(onePassMultiThreadSetIntersectionSumResultOpenMP);
+test_with_all_threads(onePassMultiThreadSetIntersectionOpenMP);
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

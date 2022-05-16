@@ -4,6 +4,7 @@
 #include <mutex>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 #include <omp.h>
 
 template<typename E>
@@ -280,12 +281,71 @@ std::set<E> onePassMultiThreadSetIntersection(const std::set<E>& first,
 
 
 template<typename E>
+std::set<E> onePassMultiThreadSetIntersectionOpenMP(const std::set<E>& first,
+						 	 	 const std::set<E>& second,
+								 const std::set<E>& third,
+								 int threadAmount) {
+	std::set<E> result;
+
+	E first_max_element = *(--first.end());
+	E second_max_element = *(--second.end());
+	E third_max_element = *(--third.end());
+
+	#pragma omp parallel num_threads(threadAmount) shared(result)
+	{
+		assert(omp_get_num_threads() == threadAmount);
+		int threead_id = omp_get_thread_num();
+		auto firstIterator = first.lower_bound(first_max_element / threadAmount * threead_id);
+		auto firstIteratorEnd = first.lower_bound(first_max_element / threadAmount * (threead_id + 1) + threadAmount);
+
+		auto secondIterator = second.lower_bound(second_max_element / threadAmount * threead_id);
+		auto secondIteratorEnd = second.lower_bound(second_max_element / threadAmount * (threead_id + 1) + threadAmount);
+
+		auto thirdIterator = third.lower_bound(third_max_element / threadAmount * threead_id);
+		auto thirdIteratorEnd = third.lower_bound(third_max_element / threadAmount * (threead_id + 1) + threadAmount);
+
+		while (firstIterator != firstIteratorEnd and secondIterator != secondIteratorEnd
+					and thirdIterator != thirdIteratorEnd) {
+			if (*firstIterator > *secondIterator) {
+				++secondIterator;
+				continue;
+			}
+
+			if (*firstIterator < *secondIterator) {
+				++firstIterator;
+				continue;
+			}
+
+			if (*firstIterator > *thirdIterator) {
+				++thirdIterator;
+				continue;
+			}
+
+			if (*firstIterator < *thirdIterator) {
+				++firstIterator;
+				continue;
+			}
+
+			#pragma omp critical
+			{
+				result.insert(*firstIterator);
+			}
+
+			++firstIterator;
+			++secondIterator;
+			++thirdIterator;
+		}
+	}
+
+	return result;
+}
+
+template<typename E>
 std::set<E> onePassMultiThreadSetIntersectionSumResult(const std::set<E>& first,
 						 	 	 const std::set<E>& second,
 								 const std::set<E>& third,
 								 int threadAmount) {
 	std::vector<std::set<E>> result_tmp(threadAmount);
-	std::mutex result_mutex;
 	std::vector<std::thread> threads;
 	E first_max_element = *(--first.end());
 	E second_max_element = *(--second.end());
@@ -341,6 +401,70 @@ std::set<E> onePassMultiThreadSetIntersectionSumResult(const std::set<E>& first,
 	for (std::thread& t : threads) {
 		t.join();
 	}
+
+	std::set<E> result;
+	for (int i = 0; i < threadAmount; ++i) {
+	    result.insert(result_tmp[i].begin(), result_tmp[i].end());
+	}
+	return result;
+}
+
+
+
+template<typename E>
+std::set<E> onePassMultiThreadSetIntersectionSumResultOpenMP(const std::set<E>& first,
+						 	 	 const std::set<E>& second,
+								 const std::set<E>& third,
+								 int threadAmount) {
+	std::vector<std::set<E>> result_tmp(threadAmount);
+
+	E first_max_element = *(--first.end());
+	E second_max_element = *(--second.end());
+	E third_max_element = *(--third.end());
+
+	#pragma omp parallel num_threads(threadAmount) shared(result_tmp)
+	{
+		assert(omp_get_num_threads() == threadAmount);
+		int threead_id = omp_get_thread_num();
+		auto firstIterator = first.lower_bound(first_max_element / threadAmount * threead_id);
+		auto firstIteratorEnd = first.lower_bound(first_max_element / threadAmount * (threead_id + 1) + threadAmount);
+
+		auto secondIterator = second.lower_bound(second_max_element / threadAmount * threead_id);
+		auto secondIteratorEnd = second.lower_bound(second_max_element / threadAmount * (threead_id + 1) + threadAmount);
+
+		auto thirdIterator = third.lower_bound(third_max_element / threadAmount * threead_id);
+		auto thirdIteratorEnd = third.lower_bound(third_max_element / threadAmount * (threead_id + 1) + threadAmount);
+
+		while (firstIterator != firstIteratorEnd and secondIterator != secondIteratorEnd
+				and thirdIterator != thirdIteratorEnd) {
+			if (*firstIterator > *secondIterator) {
+				++secondIterator;
+				continue;
+			}
+
+			if (*firstIterator < *secondIterator) {
+				++firstIterator;
+				continue;
+			}
+
+			if (*firstIterator > *thirdIterator) {
+				++thirdIterator;
+				continue;
+			}
+
+			if (*firstIterator < *thirdIterator) {
+				++firstIterator;
+				continue;
+			}
+
+			result_tmp[threead_id].insert(*firstIterator);
+
+			++firstIterator;
+			++secondIterator;
+			++thirdIterator;
+		}
+	}
+
 
 	std::set<E> result;
 	for (int i = 0; i < threadAmount; ++i) {
