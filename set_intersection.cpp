@@ -4,7 +4,9 @@
 #include <mutex>
 #include <vector>
 
+
 // remote change
+// local change
 
 template<typename E>
 std::set<E> naiveSetIntersection(const std::set<E>& first,
