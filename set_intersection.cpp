@@ -10,6 +10,9 @@
 
 // local change 2
 
+// remote change 2
+
+
 template<typename E>
 std::set<E> naiveSetIntersection(const std::set<E>& first,
 						 	 	 const std::set<E>& second,
